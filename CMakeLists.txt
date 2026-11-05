@@ -348,7 +348,7 @@ if (CXX_GCC OR CXX_CLANG)
         # See https://gcc.gnu.org/onlinedocs/gcc/x86-Options.html
         # Generic supports Pentium Pro instruction set and above
         # TODO: if a value is unknown, pass that as march and mtune
-        set(YUZU_BUILD_PRESET "custom" CACHE STRING "Build preset to use. One of: custom, generic, v3, zen2, zen4, native")
+        set(YUZU_BUILD_PRESET "custom" CACHE STRING "Build preset to use. One of: custom, coffeelake, generic, v3, zen2, zen4, native")
 
         if (${YUZU_BUILD_PRESET} STREQUAL "generic")
             set(march x86-64)
@@ -356,6 +356,10 @@ if (CXX_GCC OR CXX_CLANG)
         elseif (${YUZU_BUILD_PRESET} STREQUAL "v3")
             set(march x86-64-v3)
             set(mtune generic)
+        elseif (${YUZU_BUILD_PRESET} STREQUAL "coffeelake")
+            # Coffee Lake shares Skylake's instruction set and core (i7-9750H: AVX2, FMA, BMI2).
+            set(march skylake)
+            set(mtune skylake)
         elseif (${YUZU_BUILD_PRESET} STREQUAL "zen2")
             set(march znver2)
             set(mtune znver2)

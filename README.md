@@ -6,6 +6,21 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 -->
 
+# lichii-m5s
+
+Personal fork of [Lichii](https://github.com/zortos293/Lichii), built for The Legend of Zelda: Ocarina of Time on one machine: Core i7-9750H, GeForce GTX 1660 Ti Mobile (6 GB), 16 GB RAM, CachyOS. Builds require AVX2 and are only meant for that CPU family.
+
+It adds, on top of Lichii `nx2`:
+
+- [Djihads80/Eglantine#604](https://github.com/Djihads80/Eglantine/pull/604): Ampere `UIMAD` lowering.
+- [Djihads80/Eglantine#613](https://github.com/Djihads80/Eglantine/pull/613): reject wrapping addresses in the 64-bit `WaitIfEqual` read.
+- From [Djihads80/Eglantine#614](https://github.com/Djihads80/Eglantine/pull/614): the `SHF.R` funnel fix and the once-per-frame re-upload of a native program's uniform bank.
+- A `coffeelake` build preset (`-march=skylake -mtune=skylake`), used by CI together with the PGO profile.
+
+The in-app updater is off, so this build does not replace itself with an upstream one. Do not report problems from this fork to upstream projects.
+
+---
+
 <p align="center">
   <img src="dist/branding/lichii_icon_with_logo.png" alt="Lichii" width="600">
 </p>
