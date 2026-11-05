@@ -15,6 +15,9 @@ It adds, on top of Lichii `nx2`:
 - [Djihads80/Eglantine#604](https://github.com/Djihads80/Eglantine/pull/604): Ampere `UIMAD` lowering.
 - [Djihads80/Eglantine#613](https://github.com/Djihads80/Eglantine/pull/613): reject wrapping addresses in the 64-bit `WaitIfEqual` read.
 - From [Djihads80/Eglantine#614](https://github.com/Djihads80/Eglantine/pull/614): the `SHF.R` funnel fix and the once-per-frame re-upload of a native program's uniform bank.
+- [Djihads80/Eglantine#488](https://github.com/Djihads80/Eglantine/pull/488): decode movies with frame threads.
+- From [Djihads80/Eglantine#609](https://github.com/Djihads80/Eglantine/pull/609): descriptor-sized native storage buffers, opt-in through `EDEN_NX2_NATIVE_SSBO_SIZED=1`.
+- A default `EDEN_NX2_REJECT_HASH` from [Lichii#101](https://github.com/zortos293/Lichii/issues/101) that removes Ocarina of Time's white glow, at the cost of its bloom and river surface.
 - A `coffeelake` build preset (`-march=skylake -mtune=skylake`), used by CI together with the PGO profile.
 
 The in-app updater is off, so this build does not replace itself with an upstream one. Do not report problems from this fork to upstream projects.

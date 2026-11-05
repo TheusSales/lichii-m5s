@@ -36,3 +36,11 @@ EDEN_NX2_FENCE_BATCH=1
 #EDEN_NX2_SPLIT_SKIP=1
 #EDEN_NX2_AUTO_STUB=1
 #EDEN_NX2_KEEP_ASTC=1
+
+# --- lichii-m5s: Ocarina of Time ---
+# Skips the bloom upsample and the half-resolution layer behind the white glow and the patches on
+# Link (Lichii#101). Costs bloom and the river surface. Delete this line if the game looks wrong.
+EDEN_NX2_REJECT_HASH=f2b14c43ca0e4300,96dd01c5b0361fcb,c72b6ea746c00433
+# Keeps native storage buffers at their descriptor size outside DLSS, for fewer readbacks
+# (Eglantine#609). Test it: it can drop data in games whose upscaler is not recognized.
+#EDEN_NX2_NATIVE_SSBO_SIZED=1

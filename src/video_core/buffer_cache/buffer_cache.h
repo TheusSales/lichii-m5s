@@ -9,6 +9,7 @@
 #include "video_core/buffer_cache/uniform_cache_history.h"
 
 #include <algorithm>
+#include <cstdlib>
 #include <memory>
 #include <numeric>
 #include <stdexcept>
@@ -2632,7 +2633,11 @@ Binding BufferCache<P>::StorageBufferBinding(GPUVAddr ssbo_addr, u32 cbuf_index,
         // A native (Switch 2) compute program's pointer is bare: the word after it is another
         // parameter (a dimension, stride or texture handle), not an NVN buffer size. Taking it as
         // one bound Fortune's Weave's DLSS input features to 266 bytes and dropped the rest.
-        if (native_pointer) {
+        // EDEN_NX2_NATIVE_SSBO_SIZED=1 keeps descriptor sizing outside DLSS evaluations: mapping-sized
+        // bindings mark whole mappings as GPU-written, which Eglantine#609 measured at several GiB/s
+        // of readbacks. Opt-in: Ocarina of Time's network is not a recognized DLSS evaluation.
+        static const bool descriptor_sized = std::getenv("EDEN_NX2_NATIVE_SSBO_SIZED") != nullptr;
+        if (native_pointer && !(descriptor_sized && !kepler_compute->IsDlssDispatch())) {
             return (std::min)(memory_layout_size, static_cast<u32>(8_MiB));
         }
         const u64 next_qword = gpu_memory->Read<u64>(ssbo_addr + 8);
