@@ -439,6 +439,8 @@ jobs:
           export LDAI_OUTPUT="lichii-${GITHUB_SHA}-${{ matrix.platform }}.AppImage"
           export OUTPUT="$LDAI_OUTPUT"
           export ARCH="$arch"
+          # linuxdeploy only collects the programs: the switches are read from next to the executable.
+          install -Dm644 dist/nx2_switches.txt AppDir/usr/bin/nx2_switches.txt
           "$tools/linuxdeploy-$arch.AppImage" --appdir AppDir \
             --executable build/release/bin/lichii \
             --executable build/release/bin/eden-cli \
@@ -626,21 +628,11 @@ jobs:
           # Asset names drop the commit sha: the release tag already identifies the build, and
           # stable names let the notes table link to them.
           strip_sha() { sed "s/-${GITHUB_SHA}//" <<< "$1"; }
-          for artifact in artifacts/*/; do
-            name=$(basename "$artifact")
-            if compgen -G "$artifact*.AppImage" > /dev/null; then
-              # Linux: ship the AppImage and the tar.gz as they are.
-              for file in "$artifact"*.AppImage "$artifact"*.tar.gz; do
-                cp "$file" "dist/$(strip_sha "$(basename "$file")")"
-              done
-            elif compgen -G "$artifact*.zip" > /dev/null; then
-              for file in "$artifact"*.zip "$artifact"*.dmg; do
-                [[ -e "$file" ]] && cp "$file" "dist/$(strip_sha "$(basename "$file")")"
-              done
-            else
-              (cd "$artifact" && zip -qr "${GITHUB_WORKSPACE}/dist/$(strip_sha "$name").zip" .)
-            fi
-          done
+          # With a single artifact, download-artifact unpacks into artifacts/ without a subfolder.
+          find artifacts -type f \( -name '*.AppImage' -o -name '*.tar.gz' \) -print0 |
+            while IFS= read -r -d '' file; do
+              cp "$file" "dist/$(strip_sha "$(basename "$file")")"
+            done
           ls -la dist
 
       - name: Create release
