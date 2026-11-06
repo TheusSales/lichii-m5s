@@ -79,7 +79,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Fork build for testing on an AMD RX 6600: Windows MSVC only.
+          # Fork build for testing on an AMD RX 6600 (Windows MSVC only).
           - platform: windows-x86_64
             runner: windows-2022
 
