@@ -48,7 +48,7 @@ jobs:
       contents: write
     steps:
       - name: Prepare release tag
-        if: github.event_name == 'push' || inputs.publish_release
+        if: inputs.publish_release == true
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -606,7 +606,7 @@ jobs:
   release:
     name: Publish release
     needs: build
-    if: github.event_name == 'push' || inputs.publish_release
+    if: inputs.publish_release == true
     runs-on: ubuntu-24.04
     permissions:
       contents: write
