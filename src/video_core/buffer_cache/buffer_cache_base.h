@@ -736,6 +736,8 @@ private:
     /// writes in all of them, so the reads that usually follow it find nothing left to flush.
     Common::RangeSet<DAddr> cpu_read_ranges;
     bool download_cpu_read_ranges{};
+    /// Read-backs per native page that still flushes on demand (EDEN_NX2_PREFLUSH_HOT).
+    std::unordered_map<DAddr, u32> cpu_read_counts;
     Common::RangeSet<DAddr> gpu_modified_ranges;
     std::deque<Common::RangeSet<DAddr>> committed_gpu_modified_ranges;
 

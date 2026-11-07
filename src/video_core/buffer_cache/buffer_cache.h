@@ -283,7 +283,20 @@ std::optional<VideoCore::RasterizerDownloadArea> BufferCache<P>::GetFlushArea(DA
                                            device_addr_end_aligned - device_addr_start_aligned);
     // A preflushable mark persists and downloads later GPU writes at every fence. Native titles
     // instead keep read traps and flush on demand.
-    const bool preflush = !Tegra::g_nx2_ampere.load(std::memory_order_relaxed);
+    bool preflush = !Tegra::g_nx2_ampere.load(std::memory_order_relaxed);
+    if (!area->preemtive && !preflush) {
+        // EDEN_NX2_PREFLUSH_HOT=N (experimental, off by default): a native page the guest CPU has
+        // read back N times is marked Preflushable, so later reads skip the Finish they stall on.
+        // Ocarina of Time re-reads a few pages each frame (two of them ~10 times a second).
+        static const u32 hot_reads = [] {
+            const char* value = std::getenv("EDEN_NX2_PREFLUSH_HOT");
+            return value == nullptr ? 0u : static_cast<u32>(std::strtoul(value, nullptr, 10));
+        }();
+        if (hot_reads != 0 && ++cpu_read_counts[device_addr_start_aligned] >= hot_reads) {
+            preflush = true;
+            cpu_read_counts.erase(device_addr_start_aligned);
+        }
+    }
     if (!area->preemtive) {
         if (Nx2DownloadTrace::g_enabled) [[unlikely]] {
             Nx2DownloadTrace::Marked(device_addr_start_aligned,
